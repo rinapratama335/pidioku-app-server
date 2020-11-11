@@ -78,3 +78,70 @@ exports.register = async (req, res) => {
     });
   }
 };
+
+//method login
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    //cek email di database
+    const user = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    //jika tidak ada email di database
+    if (!user) {
+      return res.status(400).send({
+        error: {
+          message: "Internal server error",
+        },
+      });
+    }
+
+    //lolos validasi
+    //compare password
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    //jika tidak valid
+    if (!validPassword) {
+      res.status(400).send({
+        error: {
+          message: "Email or password is invalid",
+        },
+      });
+    }
+
+    //jika valid
+    const token = jwt.sign(
+      {
+        id: user.id,
+      },
+      jwtKey
+    );
+
+    //kirim response
+    res.send({
+      message: "Login successfully",
+      data: {
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          fullName: user.firstName + " " + user.lastName,
+          email: user.email,
+          role: user.role,
+          token: token,
+        },
+      },
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).send({
+      error: {
+        message: "Internal server error",
+      },
+    });
+  }
+};
