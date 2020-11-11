@@ -1,0 +1,6 @@
+const express = require("express");
+const router = express.Router();
+
+router.get("/", () => console.log("Welcome to Pidioku App"));
+
+module.exports = router;
