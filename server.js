@@ -8,6 +8,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+// untuk melihat file image category
+app.use("/image-category", express.static("uploads/images/categories"));
+
 app.use("/api/v1", router);
 
 const port = process.env.PORT;
