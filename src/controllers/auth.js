@@ -145,3 +145,30 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+exports.cekAuth = async (req, res) => {
+  try {
+    const { id } = req.user.id;
+
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+
+    res.status(200).send({
+      data: user,
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).send({
+      error: {
+        message: "Internal server error",
+      },
+    });
+  }
+};
