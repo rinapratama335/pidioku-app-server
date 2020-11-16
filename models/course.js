@@ -22,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
           name: "categoryId",
         },
       });
+
+      Course.hasMany(models.ListCourse);
     }
   }
   Course.init(
